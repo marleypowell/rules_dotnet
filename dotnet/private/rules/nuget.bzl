@@ -223,7 +223,7 @@ def _nuget_package_impl(ctx):
             "-OutputDirectory",
             output_dir,
             "-Source",
-            ctx.attr.source,
+            ctx.attr.source[1],
             ctx.attr.package,
         ]
         result = ctx.execute(nuget_cmd)
