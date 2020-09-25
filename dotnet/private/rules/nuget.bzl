@@ -206,15 +206,12 @@ def _nuget_package_impl(ctx):
         else:
             urls.append(s + "/" + ctx.attr.package + "/" + ctx.attr.version)
 
-    if ctx.attr.package.startswith("exclaimer"):
-        ctx.download_and_extract(urls, output_dir, ctx.attr.sha256, type = "zip", auth = { 
-            auth_url : {
-                    "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE="
-                } 
-            }
-        )
-    else:
-        ctx.download_and_extract(urls, output_dir, ctx.attr.sha256, type = "zip")
+    ctx.download_and_extract(urls, output_dir, ctx.attr.sha256, type = "zip", auth = { 
+        auth_url : {
+                "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE="
+            } 
+        }
+    )
 
     build_file_name = "BUILD" if not ctx.path("BUILD").exists else "BUILD.bazel"
 
