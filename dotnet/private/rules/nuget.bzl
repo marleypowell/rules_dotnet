@@ -221,7 +221,7 @@ def _nuget_package_impl(ctx):
             auth_url : { "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE=" 
         }})
     else:
-        url = ctx.attr.source[0] + "/" + ctx.attr.package + "/" + ctx.attr.version)
+        url = ctx.attr.source[0] + "/" + ctx.attr.package + "/" + ctx.attr.version
         print(url)
         ctx.download_and_extract([url], output_dir, ctx.attr.sha256, type = "zip")
 
