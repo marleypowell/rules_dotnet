@@ -197,41 +197,33 @@ def _nuget_package_impl(ctx):
     package = ctx.attr.package
     output_dir = ctx.path("")
     
-    urls = []
-    auth_url = ""
-    for s in ctx.attr.source:
-        if s == "https://exclaimerltd.pkgs.visualstudio.com/_apis/packaging/feeds/e0a92ffb-5823-4c3c-b25e-f79a0ff9d768/nuget/packages":
-            auth_url = s + "/" + ctx.attr.package + "/versions/" + ctx.attr.version + "/content"
-            urls.append(auth_url)
-        else:
-            urls.append(s + "/" + ctx.attr.package + "/" + ctx.attr.version)
+    # urls = []
+    # auth_url = ""
+    # for s in ctx.attr.source:
+    #     if s == "https://exclaimerltd.pkgs.visualstudio.com/_apis/packaging/feeds/e0a92ffb-5823-4c3c-b25e-f79a0ff9d768/nuget/packages":
+    #         auth_url = s + "/" + ctx.attr.package + "/versions/" + ctx.attr.version + "/content"
+    #         urls.append(auth_url)
+    #     else:
+    #         urls.append(s + "/" + ctx.attr.package + "/" + ctx.attr.version)
 
-    ctx.download_and_extract(urls, output_dir, ctx.attr.sha256, type = "zip", auth = { 
-        auth_url : {
-                "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE="
-            } 
-        }
-    )
+    # ctx.download_and_extract(urls, output_dir, ctx.attr.sha256, type = "zip", auth = { 
+    #     auth_url : {
+    #             "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE="
+    #         } 
+    #     }
+    # )
 
-    # if ctx.attr.use_vsts:
-    #     print("use_vsts: true")
-    #     auth_url = ""
-    #     for s in ctx.attr.source:
-    #         if s == "https://exclaimerltd.pkgs.visualstudio.com/_apis/packaging/feeds/e0a92ffb-5823-4c3c-b25e-f79a0ff9d768/nuget/packages":
-    #             auth_url = s + "/" + ctx.attr.package + "/versions/" + ctx.attr.version + "/content"
-    #             urls.append(auth_url)
-    #         else:
-    #             urls.append(s + "/" + ctx.attr.package + "/" + ctx.attr.version)
-    #         print(s)
-    #         print(auth_url)
-
-    #     ctx.download_and_extract(urls, output_dir, ctx.attr.sha256, type = "zip", auth = { 
-    #         auth_url : { "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE=" 
-    #     }})
-    # else:
-    #     urls = [s + "/" + ctx.attr.package + "/" + ctx.attr.version for s in ctx.attr.source]
-    #     print("nuget: " + urls[0])
-    #     ctx.download_and_extract(urls, output_dir, ctx.attr.sha256, type = "zip")
+    if ctx.attr.use_vsts:
+        print("use_vsts: true")
+        auth_url = ctx.attr.source[1] + "/" + ctx.attr.package + "/versions/" + ctx.attr.version + "/content"
+        print(auth_url)
+        ctx.download_and_extract([auth_url], output_dir, ctx.attr.sha256, type = "zip", auth = { 
+            auth_url : { "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE=" 
+        }})
+    else:
+        url = ctx.attr.source[0] + "/" + ctx.attr.package + "/" + ctx.attr.version)
+        print(url)
+        ctx.download_and_extract([url], output_dir, ctx.attr.sha256, type = "zip")
 
     build_file_name = "BUILD" if not ctx.path("BUILD").exists else "BUILD.bazel"
 
