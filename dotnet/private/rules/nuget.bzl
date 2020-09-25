@@ -213,7 +213,7 @@ def _nuget_package_impl(ctx):
     #     }
     # )
 
-    if ctx.attr.use_vsts:
+    # if ctx.attr.use_vsts:
         # nuget = ctx.path(ctx.attr.nuget_exe)
         nuget_cmd = [
             "nuget",
@@ -240,10 +240,10 @@ def _nuget_package_impl(ctx):
         #         } 
         #     }
         # )
-    else:
-        url = ctx.attr.source[0] + "/" + ctx.attr.package + "/" + ctx.attr.version
-        print(url)
-        ctx.download_and_extract([url], output_dir, ctx.attr.sha256, type = "zip")
+    # else:
+    #     url = ctx.attr.source[0] + "/" + ctx.attr.package + "/" + ctx.attr.version
+    #     print(url)
+    #     ctx.download_and_extract([url], output_dir, ctx.attr.sha256, type = "zip")
 
     build_file_name = "BUILD" if not ctx.path("BUILD").exists else "BUILD.bazel"
 
