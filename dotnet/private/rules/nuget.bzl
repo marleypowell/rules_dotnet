@@ -214,17 +214,32 @@ def _nuget_package_impl(ctx):
     # )
 
     if ctx.attr.use_vsts:
-        auth_urls = []
-        print("use_vsts: true")
-        auth_url = ctx.attr.source[1] + "/" + ctx.attr.package + "/versions/" + ctx.attr.version + "/content"
-        auth_urls.append(auth_url)
-        print(auth_url)
-        ctx.download_and_extract(auth_urls, output_dir, ctx.attr.sha256, type = "zip", auth = { 
-            auth_url : {
-                    "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE="
-                } 
-            }
-        )
+        nuget = ctx.path(ctx.attr._nuget_exe)
+        nuget_cmd = [
+            nuget,
+            "install",
+            "-Version",
+            ctx.attr.version,
+            "-OutputDirectory",
+            output_dir,
+            "-Source",
+            ctx.attr.source,
+            ctx.attr.package,
+        ]
+        result = ctx.execute(nuget_cmd)
+        if result.return_code:
+            fail("Nuget command failed: %s (%s)" % (result.stderr, " ".join(nuget_cmd)))
+        # auth_urls = []
+        # print("use_vsts: true")
+        # auth_url = ctx.attr.source[1] + "/" + ctx.attr.package + "/versions/" + ctx.attr.version + "/content"
+        # auth_urls.append(auth_url)
+        # print(auth_url)
+        # ctx.download_and_extract(auth_urls, output_dir, ctx.attr.sha256, type = "zip", auth = { 
+        #     auth_url : {
+        #             "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE="
+        #         } 
+        #     }
+        # )
     else:
         url = ctx.attr.source[0] + "/" + ctx.attr.package + "/" + ctx.attr.version
         print(url)
@@ -235,6 +250,7 @@ def _nuget_package_impl(ctx):
     ctx.file(build_file_name, content)
 
 _nuget_package_attrs = {
+    "_nuget_exe": attr.label(default = Label("@nuget//file:nuget.exe")),
     # Sources to download the nuget packages from
     "source": attr.string_list(default = ["https://www.nuget.org/api/v2/package"]),
     # The name of the nuget package
