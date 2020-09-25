@@ -214,10 +214,10 @@ def _nuget_package_impl(ctx):
     # )
 
     if ctx.attr.use_vsts:
-        nuget = ctx.path(ctx.attr.nuget_exe)
+        # nuget = ctx.path(ctx.attr.nuget_exe)
         nuget_cmd = [
-            nuget,
-            "install",
+            # nuget,
+            "nuget install",
             "-Version",
             ctx.attr.version,
             "-OutputDirectory",
