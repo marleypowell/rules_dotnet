@@ -214,12 +214,17 @@ def _nuget_package_impl(ctx):
     # )
 
     if ctx.attr.use_vsts:
+        auth_urls = []
         print("use_vsts: true")
         auth_url = ctx.attr.source[1] + "/" + ctx.attr.package + "/versions/" + ctx.attr.version + "/content"
+        auth_urls.append(auth_url)
         print(auth_url)
-        ctx.download_and_extract([auth_url], output_dir, ctx.attr.sha256, type = "zip", auth = { 
-            auth_url : { "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE=" 
-        }})
+        ctx.download_and_extract(auth_urls, output_dir, ctx.attr.sha256, type = "zip", auth = { 
+            auth_url : {
+                    "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE="
+                } 
+            }
+        )
     else:
         url = ctx.attr.source[0] + "/" + ctx.attr.package + "/" + ctx.attr.version
         print(url)
