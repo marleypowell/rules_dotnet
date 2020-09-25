@@ -204,7 +204,7 @@ def _nuget_package_impl(ctx):
         else:
             urls.append(s + "/" + ctx.attr.package + "/" + ctx.attr.version)
 
-    ctx.download_and_extract(urls, output_dir, ctx.attr.sha256, type = "zip")
+    ctx.download_and_extract(urls, output_dir, ctx.attr.sha256, type = "zip", auth = { "password": "tvh73c4d2jmf7xlazb4zk3aya3nzdd4cavbvm7ehadcctctomoqa" })
 
     build_file_name = "BUILD" if not ctx.path("BUILD").exists else "BUILD.bazel"
 
