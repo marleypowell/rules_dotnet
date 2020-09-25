@@ -215,20 +215,20 @@ def _nuget_package_impl(ctx):
 
     # if ctx.attr.use_vsts:
         # nuget = ctx.path(ctx.attr.nuget_exe)
-        nuget_cmd = [
-            "nuget",
-            "install",
-            "-Version",
-            ctx.attr.version,
-            "-OutputDirectory",
-            "",
-            "-Source",
-            ctx.attr.source[1],
-            ctx.attr.package,
-        ]
-        result = ctx.execute(nuget_cmd)
-        if result.return_code:
-            fail("Nuget command failed: %s (%s)" % (result.stderr, " ".join(nuget_cmd)))
+    nuget_cmd = [
+        "nuget",
+        "install",
+        "-Version",
+        ctx.attr.version,
+        "-OutputDirectory",
+        "",
+        "-Source",
+        ctx.attr.source[1],
+        ctx.attr.package,
+    ]
+    result = ctx.execute(nuget_cmd)
+    if result.return_code:
+        fail("Nuget command failed: %s (%s)" % (result.stderr, " ".join(nuget_cmd)))
         # auth_urls = []
         # print("use_vsts: true")
         # auth_url = ctx.attr.source[1] + "/" + ctx.attr.package + "/versions/" + ctx.attr.version + "/content"
