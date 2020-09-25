@@ -206,7 +206,7 @@ def _nuget_package_impl(ctx):
 
     ctx.download_and_extract(urls, output_dir, ctx.attr.sha256, type = "zip", auth = { 
         "https://exclaimerltd.pkgs.visualstudio.com/_apis/packaging/feeds/e0a92ffb-5823-4c3c-b25e-f79a0ff9d768/nuget/packages": {
-                "Basic": "OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE="
+                "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE="
             } 
         })
 
