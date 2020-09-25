@@ -198,23 +198,21 @@ def _nuget_package_impl(ctx):
     output_dir = ctx.path("")
     
     urls = []
-    auth_url = ""
-    for s in ctx.attr.source:
-        if ctx.attr.package.startswith("exclaimer"):
+
+    if ctx.attr.use_vsts:
+        auth_url = ""
+        for s in ctx.attr.source:
             if s == "https://exclaimerltd.pkgs.visualstudio.com/_apis/packaging/feeds/e0a92ffb-5823-4c3c-b25e-f79a0ff9d768/nuget/packages":
                 auth_url = s + "/" + ctx.attr.package + "/versions/" + ctx.attr.version + "/content"
                 urls.append(auth_url)
-        else:
-            urls.append(s + "/" + ctx.attr.package + "/" + ctx.attr.version)
+            else:
+                urls.append(s + "/" + ctx.attr.package + "/" + ctx.attr.version)
 
-    if ctx.attr.package.startswith("exclaimer"):
         ctx.download_and_extract(urls, output_dir, ctx.attr.sha256, type = "zip", auth = { 
-            auth_url : {
-                    "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE="
-                } 
-            }
-        )
+            auth_url : { "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE=" 
+        }})
     else:
+        urls = [s + "/" + ctx.attr.package + "/" + ctx.attr.version for s in ctx.attr.source]
         ctx.download_and_extract(urls, output_dir, ctx.attr.sha256, type = "zip")
 
     build_file_name = "BUILD" if not ctx.path("BUILD").exists else "BUILD.bazel"
@@ -229,6 +227,7 @@ _nuget_package_attrs = {
     # The version of the nuget package
     "version": attr.string(mandatory = True),
     "sha256": attr.string(mandatory = False),
+    "use_vsts": attr.bool(default = False),
     "core_lib": attr.string_dict(default = {}),
     "net_lib": attr.string_dict(default = {}),
     "mono_lib": attr.string(default = ""),
