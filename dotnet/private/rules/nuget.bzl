@@ -221,7 +221,7 @@ def _nuget_package_impl(ctx):
             "-Version",
             ctx.attr.version,
             "-OutputDirectory",
-            "",
+            output_dir,
             "-Source",
             ctx.attr.source[1],
             ctx.attr.package,
