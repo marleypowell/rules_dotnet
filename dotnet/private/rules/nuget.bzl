@@ -250,7 +250,7 @@ def _nuget_package_impl(ctx):
     ctx.file(build_file_name, content)
 
 _nuget_package_attrs = {
-    "_nuget_exe": attr.label(default = Label("@nuget//file:nuget.exe")),
+    "nuget_exe": attr.label(default = Label("@nuget//file:nuget.exe")),
     # Sources to download the nuget packages from
     "source": attr.string_list(default = ["https://www.nuget.org/api/v2/package"]),
     # The name of the nuget package
