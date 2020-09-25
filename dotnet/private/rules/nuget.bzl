@@ -200,18 +200,22 @@ def _nuget_package_impl(ctx):
     urls = []
     auth_url = ""
     for s in ctx.attr.source:
-        if s == "https://exclaimerltd.pkgs.visualstudio.com/_apis/packaging/feeds/e0a92ffb-5823-4c3c-b25e-f79a0ff9d768/nuget/packages":
-            auth_url = s + "/" + ctx.attr.package + "/versions/" + ctx.attr.version + "/content"
-            urls.append(auth_url)
+        if ctx.attr.package.startswith("exclaimer"):
+            if s == "https://exclaimerltd.pkgs.visualstudio.com/_apis/packaging/feeds/e0a92ffb-5823-4c3c-b25e-f79a0ff9d768/nuget/packages":
+                auth_url = s + "/" + ctx.attr.package + "/versions/" + ctx.attr.version + "/content"
+                urls.append(auth_url)
         else:
             urls.append(s + "/" + ctx.attr.package + "/" + ctx.attr.version)
 
-    ctx.download_and_extract(urls, output_dir, ctx.attr.sha256, type = "zip", auth = { 
-        auth_url : {
-                "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE="
-            } 
-        }
-    )
+    if ctx.attr.package.startswith("exclaimer"):
+        ctx.download_and_extract(urls, output_dir, ctx.attr.sha256, type = "zip", auth = { 
+            auth_url : {
+                    "Authorization" : "Basic OnR2aDczYzRkMmptZjd4bGF6YjR6azNheWEzbnpkZDRjYXZidm03ZWhhZGNjdGN0b21vcWE="
+                } 
+            }
+        )
+    else:
+        ctx.download_and_extract(urls, output_dir, ctx.attr.sha256, type = "zip")
 
     build_file_name = "BUILD" if not ctx.path("BUILD").exists else "BUILD.bazel"
 
